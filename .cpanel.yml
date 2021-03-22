@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/bindprge/public_html/
+    - export DEPLOYPATH=/home/bindprge/emr.bindas.co/
     - /bin/cp -R * $DEPLOYPATH
