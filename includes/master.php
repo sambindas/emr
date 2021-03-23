@@ -1,6 +1,5 @@
 <?php
 $env = $_SERVER['REMOTE_ADDR']=='127.0.0.1' ? 1 : '';
-$env=1;
 session_start();
 error_reporting($env);
 if (!isset($_SESSION['email']))
