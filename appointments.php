@@ -1,6 +1,6 @@
 <?php
 include 'includes/master.php';
-$_SESSION['pt'] = 'Patients List';
+$_SESSION['pt'] = 'Appointments List';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -8,7 +8,7 @@ $_SESSION['pt'] = 'Patients List';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>EMR | Patients List</title>
+    <title>EMR | Today's Appointments</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -89,7 +89,7 @@ $_SESSION['pt'] = 'Patients List';
                         <div class="sparkline13-list">
                             <div class="sparkline13-hd">
                                 <div class="main-sparkline13-hd">
-                                    <h1>Patients <span class="table-project-n">Data</span> Table</h1>
+                                    <h1>Appointments <span class="table-project-n">Data</span> Table</h1>
                                 </div>
                             </div>
                             <div class="sparkline13-graph">
@@ -102,7 +102,7 @@ $_SESSION['pt'] = 'Patients List';
 											</select>
                                     </div>
                                     <?php
-                                        $patients = runSelectQuery('patients');
+                                        $appointments = runSelectQuery('encounter');
                                     ?>
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
                                         data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
@@ -111,27 +111,37 @@ $_SESSION['pt'] = 'Patients List';
                                                 <th data-field="state" data-checkbox="true"></th>
                                                 <th data-field="id">ID</th>
                                                 <th data-field="name" data-editable="false">Surname</th>
-                                                <th data-field="company" data-editable="true">Other Names</th>
-                                                <th data-field="price" data-editable="true">Gender</th>
-												<th data-field="date" data-editable="true">Phone</th>
-												<th data-field="task" data-editable="true">Date of Birth</th>
+                                                <th data-field="company" data-editable="false">Other Names</th>
+                                                <th data-field="price" data-editable="false">Vital Signs</th>
+												<th data-field="date" data-editable="false">Diagnosis</th>
+												<th data-field="condition" data-editable="false">Condition</th>
+                                                <th data-field="task" data-editable="false">Seen By</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                                while ($patient = mysqli_fetch_array($patients)) {
+                                                while ($appointment = mysqli_fetch_array($appointments)) {
+                                                    $patient = getPatient($appointment['patient_id']);
+                                                    $vitals = unserialize($appointment['vitals']);
+                                                    $vitals_text = '';
+                                                    foreach ($vitals as $vkey => $vvalue) {
+                                                        $vitals_text .= '<b>'.$vkey.':</b> '.$vvalue.'<br>';
+                                                    }
+                                                    $created_by = runSelectQuery('users', ['id', $appointment['created_by']], true);
                                             ?>
                                             <tr>
                                                 <td></td>
-                                                <td><?php echo $patient['id'] ?></td>
+                                                <td><?php echo $appointment['id'] ?></td>
                                                 <td><?php echo $patient['surname'] ?></td>
                                                 <td><?php echo $patient['other_names'] ?></td>
-												<td><?php echo $patient['gender'] ?></td>
-												<td><?php echo $patient['phone'] ?></td>
-                                                <td><?php echo $patient['dob'] ?></td>
+												<td><?php echo $vitals_text ?></td>
+												<td><?php echo $appointment['diagnosis'] ?></td>
+                                                <td><?php echo $appointment['outcome'] ?></td>
+                                                <td><?php echo $created_by['full_name'] ?></td>
                                                 <td class="datatable-ct">
-                                                    <a title="Start Encounter" href="encounter.php?patient=<?php echo $patient['id'] ?>"><i class="fa fa-book"></i></a>
+                                                    <a title="Edit Encounter" href="encounter.php?patient=<?php echo $appointment['id'] ?>"><i class="fa fa-book"></i></a>
+                                                    <a title="View Encounter" href="encounter.php?patient=<?php echo $appointment['id'] ?>"><i class="fa fa-key"></i></a>
                                                 </td>
                                             </tr>
                                             <?php } ?>

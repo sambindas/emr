@@ -1,6 +1,6 @@
 <?php
 include 'includes/master.php';
-$_SESSION['pt'] = 'Add New Patient';
+$_SESSION['pt'] = 'Add New User';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -8,7 +8,7 @@ $_SESSION['pt'] = 'Add New Patient';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Basic Form Element | jeweler - Material Admin Template</title>
+    <title>EMR | Add New User</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -60,6 +60,10 @@ $_SESSION['pt'] = 'Add New Patient';
     <!-- forms CSS
 		============================================ -->
     <link rel="stylesheet" href="css/form/all-type-forms.css">
+    <link rel="stylesheet" href="css/select2/select2.min.css">
+    <!-- chosen CSS
+        ============================================ -->
+    <link rel="stylesheet" href="css/chosen/bootstrap-chosen.css">
     <!-- style CSS
 		============================================ -->
     <link rel="stylesheet" href="style.css">
@@ -88,7 +92,7 @@ $_SESSION['pt'] = 'Add New Patient';
                         <div class="sparkline12-list">
                             <div class="sparkline12-hd">
                                 <div class="main-sparkline12-hd">
-                                    <h1>Register New Patient</h1>
+                                    <h1>Register New User</h1>
                                 </div>
                             </div>
                             <div class="sparkline12-graph">
@@ -100,30 +104,20 @@ $_SESSION['pt'] = 'Add New Patient';
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Surname</label>
+                                                                <label class="login2 pull-right pull-right-pro">Username</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="surname" required class="form-control" />
+                                                                <input type="text" name="username" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Other Name(s)</label>
+                                                                <label class="login2 pull-right pull-right-pro">Full Name</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="other_names" required class="form-control" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Date of Birth</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="date" name="dob" required class="form-control" />
+                                                                <input type="text" name="full_name" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -143,130 +137,43 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Email</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="email" name="email" class="form-control" />
+                                                                <input type="email" required name="email" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Address</label>
+                                                                <label class="login2 pull-right pull-right-pro">Password</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <textarea  type="password" name="address" class="form-control" /></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Gender </label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
-                                                                <div class="bt-df-checkbox pull-left">
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                                            <div class="i-checks pull-left">
-                                                                                <label><input type="radio" value="Male" name="gender[]"> <i></i> Male </label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                                            <div class="i-checks pull-left">
-                                                                                <label><input type="radio" value="Female" name="gender[]"> <i></i> Female </label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                <input type="password" name="password" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Genotype</label>
+                                                                <label class="login2 pull-right pull-right-pro">Confirm Password</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="password" name="password2" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">Role</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                                 <div class="form-select-list">
-                                                                    <select class="form-control custom-select-value" name="genotype">
-                                                                        <option value="">Select One</option>
-																		<option value="AA">AA</option>
-																		<option value="AS">AS</option>
-																		<option value="SS">SS</option>
-																		<option value="SC">SC</option>
-																	</select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Blood Group</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <div class="form-select-list">
-                                                                    <select class="form-control custom-select-value" name="bg">
-                                                                        <option value="">Select One</option>
-                                                                        <option value="A+">A+</option>
-                                                                        <option value="A-">A-</option>
-                                                                        <option value="B+">B+</option>
-                                                                        <option value="B-">B-</option>
-                                                                        <option value="AB+">AB+</option>
-                                                                        <option value="BA-">AB-</option>
-                                                                        <option value="O+">O+</option>
-                                                                        <option value="O-">O-</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Next of Kin Name</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" required name="nok_name" class="form-control" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Next of Kin Phone</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" required name="nok_phone" class="form-control" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Next of Kin Address</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <textarea  type="" required name="nok_address" class="form-control" /></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">Relationship to Next of Kin</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <div class="form-select-list">
-                                                                    <select class="form-control custom-select-value" required name="nok_relationship">
-                                                                        <option value="">Select One</option>
-                                                                        <option value="Father">Father</option>
-                                                                        <option value="Mother">Mother</option>
-                                                                        <option value="Brother">Brother</option>
-                                                                        <option value="Sister">Sister</option>
-                                                                        <option value="Son">Son</option>
-                                                                        <option value="Daughter">Daughter</option>
+                                                                    <select data-placeholder="Select a role" required multiple="" tabindex="-1" class=" chosen-select form-control custom-select-value"  required name="role">
+                                                                        <option value="Super Admin">Super Admin</option>
+                                                                        <option value="Doctor">Doctor</option>
+                                                                        <option value="Nurse">Nurse</option>
+                                                                        <option value="Pharmacist">Pharmacist</option>
+                                                                        <option value="Front Desk">Front Desk</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -300,7 +207,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <div class="col-lg-9">
                                                                     <div class="login-horizental cancel-wp pull-left">
                                                                         <button class="btn btn-white" type="submit">Cancel</button>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_patient" type="submit">Register</button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_user" type="submit">Register</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -337,6 +244,10 @@ $_SESSION['pt'] = 'Add New Patient';
     <!-- bootstrap JS
 		============================================ -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/chosen/chosen.jquery.js"></script>
+    <script src="js/chosen/chosen-active.js"></script>
+    <script src="js/select2/select2.full.min.js"></script>
+    <script src="js/select2/select2-active.js"></script>
     <!-- wow JS
 		============================================ -->
     <script src="js/wow.min.js"></script>

@@ -712,7 +712,7 @@
                                             <li><span class="bread-blod"><?php echo $_SESSION['pt'] ?></span>
                                             </li><br><Br>
                                             <?php if ($_SESSION['s_msg']) echo '<span class="alert alert-success"> '.$_SESSION['s_msg'].'</span>'?>
-                                            <?php if ($_SESSION['e_msg']) echo '<span class="alert alert-success"> '.$_SESSION['e_msg'].'</span>'?>
+                                            <?php if ($_SESSION['e_msg']) echo '<span class="alert alert-danger"> '.$_SESSION['e_msg'].'</span>'?>
                                             <?php
                                                 unset($_SESSION['s_msg']);
                                                 unset($_SESSION['e_msg']);
