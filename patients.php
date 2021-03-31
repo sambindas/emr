@@ -104,17 +104,17 @@ $_SESSION['pt'] = 'Patients List';
                                     <?php
                                         $patients = runSelectQuery('patients');
                                     ?>
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="fal" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
                                         data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
                                                 <th data-field="state" data-checkbox="true"></th>
                                                 <th data-field="id">ID</th>
                                                 <th data-field="name" data-editable="false">Surname</th>
-                                                <th data-field="company" data-editable="true">Other Names</th>
-                                                <th data-field="price" data-editable="true">Gender</th>
-												<th data-field="date" data-editable="true">Phone</th>
-												<th data-field="task" data-editable="true">Date of Birth</th>
+                                                <th data-field="company" data-editable="false">Other Names</th>
+                                                <th data-field="price" data-editable="false">Gender</th>
+												<th data-field="date" data-editable="false">Phone</th>
+												<th data-field="task" data-editable="false">Date of Birth</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
@@ -132,6 +132,7 @@ $_SESSION['pt'] = 'Patients List';
                                                 <td><?php echo $patient['dob'] ?></td>
                                                 <td class="datatable-ct">
                                                     <a title="Start Encounter" href="encounter.php?patient=<?php echo $patient['id'] ?>"><i class="fa fa-book"></i></a>
+                                                    <a title="Edit Patient" href="add-new.php?patient=<?php echo $patient['id'] ?>"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                             </tr>
                                             <?php } ?>

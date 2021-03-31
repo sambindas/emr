@@ -1,6 +1,18 @@
 <?php
 include 'includes/master.php';
-$_SESSION['pt'] = 'Add New Patient';
+$patient_id = $_GET['patient'];
+$submit = 'Register';
+if ($patient_id) {
+    $patient = getPatient($patient_id);
+    if (!$patient) {
+        $_SESSION['e_msg'] = 'Invalid Patient';
+        header('Location: patients.php');
+        exit;
+    }
+    $submit = 'Update';
+}
+
+$_SESSION['pt'] = $patient_id ? 'Edit Patient Details' : 'Add New Patient';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -8,7 +20,7 @@ $_SESSION['pt'] = 'Add New Patient';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Basic Form Element | jeweler - Material Admin Template</title>
+    <title>EMR | <?php echo $_SESSION['pt']; ?></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -88,7 +100,7 @@ $_SESSION['pt'] = 'Add New Patient';
                         <div class="sparkline12-list">
                             <div class="sparkline12-hd">
                                 <div class="main-sparkline12-hd">
-                                    <h1>Register New Patient</h1>
+                                    <h1><?php echo $_SESSION['pt']; ?></h1>
                                 </div>
                             </div>
                             <div class="sparkline12-graph">
@@ -96,14 +108,15 @@ $_SESSION['pt'] = 'Add New Patient';
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="all-form-element-inner">
-                                                <form action="processing.php" method="post">
+                                                <form action="processing.php" method="post" enctype='multipart/form-data'>
+                                                    <input type="hidden" name="patient_id" value="<?php echo $patient['id'] ? $patient['id'] : '' ?>">
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                                 <label class="login2 pull-right pull-right-pro">Surname</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="surname" required class="form-control" />
+                                                                <input type="text" name="surname" value="<?php echo $patient['surname'] ? $patient['surname'] : '' ?>" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -113,7 +126,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Other Name(s)</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="other_names" required class="form-control" />
+                                                                <input type="text" value="<?php echo $patient['other_names'] ? $patient['other_names'] : '' ?>" name="other_names" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +136,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Date of Birth</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="date" name="dob" required class="form-control" />
+                                                                <input type="date" value="<?php echo $patient['dob'] ? $patient['dob'] : '' ?>" name="dob" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -133,7 +146,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Phone</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="phone" class="form-control" />
+                                                                <input type="text" value="<?php echo $patient['phone'] ? $patient['phone'] : '' ?>" name="phone" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -143,7 +156,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Email</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="email" name="email" class="form-control" />
+                                                                <input type="email" value="<?php echo $patient['email'] ? $patient['email'] : '' ?>" name="email" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -153,7 +166,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Address</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <textarea  type="password" name="address" class="form-control" /></textarea>
+                                                                <textarea  type="password" name="address" class="form-control" /><?php echo $patient['address'] ? $patient['address'] : '' ?></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -167,14 +180,15 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                             <div class="i-checks pull-left">
-                                                                                <label><input type="radio" value="Male" name="gender[]"> <i></i> Male </label>
+                                                                                <label><input type="radio" <?php if ($patient['gender']=='Male') echo 'checked';?> value="Male" name="gender[]"> <i></i> Male 
+                                                                                </label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                             <div class="i-checks pull-left">
-                                                                                <label><input type="radio" value="Female" name="gender[]"> <i></i> Female </label>
+                                                                                <label><input type="radio" <?php if ($patient['gender']=='Female') echo 'checked';?> value="Female" name="gender[]"> <i></i> Female </label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -191,10 +205,10 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <div class="form-select-list">
                                                                     <select class="form-control custom-select-value" name="genotype">
                                                                         <option value="">Select One</option>
-																		<option value="AA">AA</option>
-																		<option value="AS">AS</option>
-																		<option value="SS">SS</option>
-																		<option value="SC">SC</option>
+																		<option <?php if ($patient['genotype']=='AA') echo 'selected'; ?> value="AA">AA</option>
+																		<option <?php if ($patient['genotype']=='AS') echo 'selected'; ?> value="AS">AS</option>
+																		<option <?php if ($patient['genotype']=='SS') echo 'selected'; ?> value="SS">SS</option>
+																		<option <?php if ($patient['genotype']=='SC') echo 'selected'; ?> value="SC">SC</option>
 																	</select>
                                                                 </div>
                                                             </div>
@@ -209,14 +223,14 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <div class="form-select-list">
                                                                     <select class="form-control custom-select-value" name="bg">
                                                                         <option value="">Select One</option>
-                                                                        <option value="A+">A+</option>
-                                                                        <option value="A-">A-</option>
-                                                                        <option value="B+">B+</option>
-                                                                        <option value="B-">B-</option>
-                                                                        <option value="AB+">AB+</option>
-                                                                        <option value="BA-">AB-</option>
-                                                                        <option value="O+">O+</option>
-                                                                        <option value="O-">O-</option>
+                                                                        <option <?php if ($patient['blood_group']=='A+') echo 'selected'; ?> value="A+">A+</option>
+                                                                        <option <?php if ($patient['blood_group']=='A-') echo 'selected'; ?> value="A-">A-</option>
+                                                                        <option <?php if ($patient['blood_group']=='B+') echo 'selected'; ?> value="B+">B+</option>
+                                                                        <option <?php if ($patient['blood_group']=='B-') echo 'selected'; ?> value="B-">B-</option>
+                                                                        <option <?php if ($patient['blood_group']=='AB+') echo 'selected'; ?> value="AB+">AB+</option>
+                                                                        <option <?php if ($patient['blood_group']=='AB-') echo 'selected'; ?> value="BA-">AB-</option>
+                                                                        <option <?php if ($patient['blood_group']=='O+') echo 'selected'; ?> value="O+">O+</option>
+                                                                        <option <?php if ($patient['blood_group']=='O-') echo 'selected'; ?> value="O-">O-</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -228,7 +242,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Next of Kin Name</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" required name="nok_name" class="form-control" />
+                                                                <input type="text" value="<?php echo $patient['nok_name'] ? $patient['nok_name'] : '' ?>" required name="nok_name" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -238,7 +252,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Next of Kin Phone</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" required name="nok_phone" class="form-control" />
+                                                                <input type="text" value="<?php echo $patient['nok_phone'] ? $patient['nok_phone'] : '' ?>" required name="nok_phone" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -248,7 +262,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <label class="login2 pull-right pull-right-pro">Next of Kin Address</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <textarea  type="" required name="nok_address" class="form-control" /></textarea>
+                                                                <textarea required name="nok_address" class="form-control" /><?php echo $patient['nok_address'] ? $patient['nok_address'] : '' ?></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -261,12 +275,12 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <div class="form-select-list">
                                                                     <select class="form-control custom-select-value" required name="nok_relationship">
                                                                         <option value="">Select One</option>
-                                                                        <option value="Father">Father</option>
-                                                                        <option value="Mother">Mother</option>
-                                                                        <option value="Brother">Brother</option>
-                                                                        <option value="Sister">Sister</option>
-                                                                        <option value="Son">Son</option>
-                                                                        <option value="Daughter">Daughter</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Father') echo 'selected'; ?> value="Father">Father</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Mother') echo 'selected'; ?> value="Mother">Mother</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Brother') echo 'selected'; ?> value="Brother">Brother</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Sister') echo 'selected'; ?> value="Sister">Sister</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Son') echo 'selected'; ?> value="Son">Son</option>
+                                                                        <option <?php if ($patient['nok_relationship']=='Daughter') echo 'selected'; ?> value="Daughter">Daughter</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -285,9 +299,9 @@ $_SESSION['pt'] = 'Add New Patient';
 																			</label>
                                                                         <div class="file-button">
                                                                             Browse
-                                                                            <input type="file" onchange="document.getElementById('prepend-big-btn').value = this.value;">
+                                                                            <input type="file" name="photo" onchange="document.getElementById('prepend-big-btn').value = this.value;">
                                                                         </div>
-                                                                        <input type="text" name="photo" id="prepend-big-btn" placeholder="no file selected">
+                                                                        <input type="text" id="prepend-big-btn" placeholder="no file selected">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -300,7 +314,7 @@ $_SESSION['pt'] = 'Add New Patient';
                                                                 <div class="col-lg-9">
                                                                     <div class="login-horizental cancel-wp pull-left">
                                                                         <button class="btn btn-white" type="submit">Cancel</button>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_patient" type="submit">Register</button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_patient" type="submit"><?php echo $submit; ?></button>
                                                                     </div>
                                                                 </div>
                                                             </div>

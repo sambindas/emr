@@ -111,9 +111,10 @@ $_SESSION['pt'] = 'Drugs List';
                                                 <th data-field="state" data-checkbox="true"></th>
                                                 <th data-field="id">ID</th>
                                                 <th data-field="name" data-editable="false">Drug Name</th>
-                                                <th data-field="company" data-editable="true">Category</th>
-                                                <th data-field="price" data-editable="true">Selling Price</th>
-												<th data-field="date" data-editable="true">Unit of Measurement</th>
+                                                <th data-field="company" data-editable="false">Category</th>
+                                                <th data-field="price" data-editable="false">Selling Price</th>
+                                                <th data-field="qoh" data-editable="false">Quantity on Hand</th>
+												<th data-field="date" data-editable="false">Unit of Measurement</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
@@ -127,10 +128,62 @@ $_SESSION['pt'] = 'Drugs List';
                                                 <td><?php echo $drug['drug_name'] ?></td>
                                                 <td><?php echo $drug['category'] ?></td>
 												<td><?php echo 'N'.$drug['price'] ?></td>
+                                                <td><?php echo $drug['qoh'] ?></td>
 												<td><?php echo $drug['uom'] ?></td>
-                                                <td class="datatable-ct"><i class="fa fa-check"></i>
+                                                <td class="datatable-ct">
+                                                    <a title="Edit Drug" href="add-drug.php?drug=<?php echo $drug['id'] ?>"><i class="fa fa-pencil"></i></a>
+                                                    <a title="Add Drugs" href="#" data-toggle="modal" data-target="#add<?php echo $drug['id']; ?>"><i class="fa fa-plus"></i></a>
+                                                    <a title="Deduct Quantity" href="#" data-toggle="modal" data-target="#deduct<?php echo $drug['id']; ?>"><i class="fa fa-minus"></i></a>
                                                 </td>
                                             </tr>
+
+                                            <div id="add<?php echo $drug['id']; ?>" class="modal modal-adminpro-general Customwidth-popup-WarningModal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header header-color-modal bg-color-3">
+                                                            <h4 class="modal-title">Add Drugs to Inventory</h4>
+                                                            <div class="modal-close-area modal-close-df">
+                                                                <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" action="processing.php">
+                                                                <input type="hidden" name="drug_id" value="<?php echo $drug['id'] ?>">
+                                                                <input type="hidden" name="type" value="add">
+                                                                <input class="form-control" type="quantity" name="quantity" type="number" required placeholder="Input Quantity Added" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" >
+                                                                <br><input type="submit" class="btn btn-primary" value="Add" name="submit_move_drug">
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a data-dismiss="modal" href="#">Close</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="deduct<?php echo $drug['id']; ?>" class="modal modal-adminpro-general Customwidth-popup-WarningModal fade" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header header-color-modal bg-color-3">
+                                                            <h4 class="modal-title">Deduct Drugs from Inventory</h4>
+                                                            <div class="modal-close-area modal-close-df">
+                                                                <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" action="processing.php">
+                                                                <input type="hidden" name="drug_id" value="<?php echo $drug['id'] ?>">
+                                                                <input type="hidden" name="type" value="deduct">
+                                                                <input class="form-control" type="quantity" name="quantity" type="number" required placeholder="Input Quantity Deducted" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" >
+                                                                <br><input type="submit" class="btn btn-primary" value="Add" name="submit_move_drug">
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a data-dismiss="modal" href="#">Close</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <?php } ?>
                                         </tbody>
                                     </table>

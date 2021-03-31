@@ -1,5 +1,14 @@
 <?php
 include 'includes/master.php';
+
+$allowed_roles = ['Doctor'];
+$user_role = getLoggedInUser('role');
+
+if (!in_array($user_role, $allowed_roles) && $user_role != 'Super Admin') {
+    $_SESSION['e_msg'] = 'Youre not authorised to access that page.';
+    header('Location: patients.php');
+    exit;
+}
 $_SESSION['pt'] = 'Document Patient Encounter';
 $id = $_GET['patient'];
 if (!$id) {
@@ -12,6 +21,25 @@ if (!$patient) {
     header('Location: patients.php');
 }
 $last_visit = getLastVisit($id);
+if ($last_visit) {
+    if (is_array($last_visit)) {
+        $pc = unserialize($last_visit['presenting_complains']);
+        $dp = unserialize($last_visit['prescriptions']);
+        $lv = '<div style="float:left;">';
+        $lv .= '<p><b>Date of Visit:</b> '.date('d-m-Y', strtotime($last_visit['created_at'])).'</p>';
+        $lv .= '<p><b>Presenting Complains:</b> '.implode(',', $pc).'</p>';
+        $lv .= '<p><b>History of Presenting Complains:</b> '.$last_visit['history_of_complains'].'</p>';
+        $lv .= '<p><b>Diagnosis:</b> '.date('d-m-Y', strtotime($last_visit['created_at'])).'</p>';
+        $lv .= '<p><b>Durgs Prescribed:</b> '.implode($dp).'</p>';
+        $lv .= '<p><b>Outcome:</b> '.$last_visit['outcome'].'</p>';
+        $lv .= '<p><b>Admitted:</b> '.$last_visit['admitted'].'</p>';
+        $lv .= '<p><b>Follow up Plan:</b> '.$last_visit['follow_up'].'</p>';
+        $lv .= '<p><b>Other Notes:</b> '.$last_visit['notes'].'</p>';
+        $lv .= '</div>';
+    } else {
+        die(var_dump('no visit'));
+    }
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -118,6 +146,7 @@ $last_visit = getLastVisit($id);
                                                 </div>
                                             </div>
                                             <div class="modal-body">
+                                                <img width="100px" height="100px" src="<?php echo 'img/patient/'.$patient['photo'] ?>">
                                                 <h2><?php echo $patient['surname'].' '.$patient['other_names'].' ('.$patient['gender'].')'; ?></h2>
                                                 <p><b>Date of Birth:</b> <?php echo date('d-m-Y', strtotime($patient['dob'])); ?></p>
                                                 <p><b>Phone:</b> <?php echo $patient['phone']; ?></p>
@@ -142,8 +171,8 @@ $last_visit = getLastVisit($id);
                                                 </div>
                                             </div>
                                             <div class="modal-body">
-                                                <h2><?php echo $patient['surname'].' '.$patient['other_names'].' ('.$patient['gender'].')'; ?></h2>
-                                                <?php echo getLastVisit($id); ?>
+                                                <h2><?php echo $patient['surname'].' '.$patient['other_names'].' ('.$patient['gender'].')'; ?></h2><hr>
+                                                <?php echo $lv; ?>
                                             </div>
                                             <div class="modal-footer">
                                                 <a data-dismiss="modal" href="#">Close</a>

@@ -22,7 +22,7 @@ function getLoggedInUser($column = false) {
 		return $data;
 }
 
-function runSelectQuery($table, $where = false, $do_while = false, $group_by = false, $order_by=false) {
+function runSelectQuery($table, $where = false, $do_while = false, $group_by = false, $order_by=false, $limit=false) {
 	global $conn;
 	$sql = "SELECT * FROM $table where 1=1";
 	if ($where) {
@@ -38,6 +38,9 @@ function runSelectQuery($table, $where = false, $do_while = false, $group_by = f
 	}
 	if ($order_by) {
 		$sql .= " ORDER BY $order_by[0] $order_by[1]";
+	}
+	if ($limit) {
+		$sql .= " LIMIT $limit";
 	}
 	$run_sql = mysqli_query($conn, $sql);
 	if ($do_while) {
@@ -60,6 +63,53 @@ function runInsertQuery($table, $data) {
 	return mysqli_query($conn, $sql);
 }
 
+function runUpdateQuery($table, $set, $where) {
+	global $conn;
+	$cols = array_keys($set);
+	$values = array_values($set);
+
+	$sql = "UPDATE $table SET ";
+	$len = count($set);
+	$i = 1;
+	$times = 0;
+	foreach ($set as $s => $v) {
+		if ($i == $len) {
+
+		}
+		if (is_int($v)) {
+			if ($i == $len)
+				$sql .= $s." = ".$v." ";
+			else
+				$sql .= $s." = ".$v.", ";
+		} else {
+			if ($i == $len)
+				$sql .= $s." = '".$v."' ";
+			else
+				$sql .= $s." = '".$v."', ";
+		}
+		$i++;
+	}
+
+	foreach ($where as $sw => $vw) {
+		if ($times > 0 ) {
+			if (is_int($vw)) {
+				$sql .= "AND WHERE ".$sw." = ".$vw." ";
+			} else {
+				$sql .= "AND WHERE ".$sw." = '".$vw."' ";
+			}
+		} else {
+			if (is_int($vw)) {
+				$sql .= "WHERE ".$sw." = ".$vw." ";
+			} else {
+				$sql .= "WHERE ".$sw." = '".$vw."' ";
+			}
+		}
+		$times++;
+	}
+	
+	return mysqli_query($conn, $sql);
+}
+
 function getPatient($id) {
 	$where = array('id'=>$id);
 	$patient = runSelectQuery('patients', $where);
@@ -70,7 +120,19 @@ function getPatient($id) {
 }
 
 function getLastVisit($id) {
-	return 'No Visit For This Patient';
+	$where = array('patient_id'=>$id);
+	$order_by = array('id','desc');
+	$last_visit = runSelectQuery('encounter', $where, '', '', $order_by, 1);
+	
+	if($last_visit->num_rows > 0) {
+		while ($result = mysqli_fetch_array($last_visit)) {
+			$final = $result;
+		}
+		return $final;
+	} else {
+		return 'No Visit For This Patient';
+	}
+	
 }
 
 function getAllergies($id) {
@@ -99,6 +161,7 @@ function admitPatient($patient_id, $encounter_token, $diagnosis, $data) {
 
 function savePrescription($patient_id, $encounter_token, $diagnosis, $prescriptons) {
 	$saved = 0;
+	$prescriptons = unserialize($prescriptons);
 	foreach ($prescriptons as $prescripton_key => $prescripton) {
 		$data = array('prescription'=>$prescripton, 'patient'=>$patient_id, 'encounter_token'=>$encounter_token,
 				'created_at'=>date('d-m-y h:i:s'), 'created_by'=>getLoggedInUser('id'));

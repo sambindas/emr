@@ -1,6 +1,18 @@
 <?php
 include 'includes/master.php';
-$_SESSION['pt'] = 'Add New Drug';
+$drug_id = $_GET['drug'];
+$submit = 'Save';
+if ($drug_id) {
+    $drug = runSelectQuery('drugs', ['id'=>$drug_id], true);
+    if (!$drug) {
+        $_SESSION['e_msg'] = 'Invalid Drug';
+        header('Location: drugs.php');
+        exit;
+    }
+    $submit = 'Update';
+}
+
+$_SESSION['pt'] = $drug_id ? 'Edit Drug Details' : 'Add New Drug';
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -8,7 +20,7 @@ $_SESSION['pt'] = 'Add New Drug';
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>EMR | Add Drug</title>
+    <title>EMR | <?php echo $_SESSION['pt']; ?></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -88,7 +100,7 @@ $_SESSION['pt'] = 'Add New Drug';
                         <div class="sparkline12-list">
                             <div class="sparkline12-hd">
                                 <div class="main-sparkline12-hd">
-                                    <h1>Add New Drug</h1>
+                                    <h1><?php echo $_SESSION['pt']; ?></h1>
                                 </div>
                             </div>
                             <div class="sparkline12-graph">
@@ -97,13 +109,14 @@ $_SESSION['pt'] = 'Add New Drug';
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="all-form-element-inner">
                                                 <form action="processing.php" method="post">
+                                                    <input type="hidden" name="drug_id" value="<?php echo $drug_id ? $drug_id : '' ?>">
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                                 <label class="login2 pull-right pull-right-pro">Drug Name</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" placeholder="e.g Paracetamol" name="drug_name" required class="form-control" />
+                                                                <input type="text" value="<?php echo $drug['drug_name'] ? $drug['drug_name'] : '' ?>" placeholder="e.g Paracetamol" name="drug_name" required class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -116,15 +129,15 @@ $_SESSION['pt'] = 'Add New Drug';
                                                                 <div class="form-select-list">
                                                                     <select class="form-control custom-select-value" required name="uom">
                                                                         <option value="">Select One</option>
-                                                                        <option value="Tablet">Tablet</option>
-                                                                        <option value="Bottle">Bottle</option>
-                                                                        <option value="Ampoule">Ampoule</option>
-                                                                        <option value="Capsule">Capsule</option>
-                                                                        <option value="Sachet">Sachet</option>
-                                                                        <option value="Pack">Pack</option>
-                                                                        <option value="Tin">Tin</option>
-                                                                        <option value="Vial">Vial</option>
-                                                                        <option value="Bag">Bag</option>
+                                                                        <option  <?php if ($drug['uom']=='Tablet') echo 'selected'; ?> value="Tablet">Tablet</option>
+                                                                        <option  <?php if ($drug['uom']=='Bottle') echo 'selected'; ?> value="Bottle">Bottle</option>
+                                                                        <option  <?php if ($drug['uom']=='Ampoule') echo 'selected'; ?> value="Ampoule">Ampoule</option>
+                                                                        <option  <?php if ($drug['uom']=='Capsule') echo 'selected'; ?> value="Capsule">Capsule</option>
+                                                                        <option  <?php if ($drug['uom']=='Sachet') echo 'selected'; ?> value="Sachet">Sachet</option>
+                                                                        <option  <?php if ($drug['uom']=='Pack') echo 'selected'; ?> value="Pack">Pack</option>
+                                                                        <option  <?php if ($drug['uom']=='Tin') echo 'selected'; ?> value="Tin">Tin</option>
+                                                                        <option  <?php if ($drug['uom']=='Vial') echo 'selected'; ?> value="Vial">Vial</option>
+                                                                        <option  <?php if ($drug['uom']=='Bag') echo 'selected'; ?> value="Bag">Bag</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -136,7 +149,7 @@ $_SESSION['pt'] = 'Add New Drug';
                                                                 <label class="login2 pull-right pull-right-pro">Selling Price</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="price" placeholder="N0.00" class="form-control" />
+                                                                <input type="text" value="<?php echo $drug['price'] ? $drug['price'] : '' ?>" name="price" placeholder="N0.00" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -149,12 +162,12 @@ $_SESSION['pt'] = 'Add New Drug';
                                                                 <div class="form-select-list">
                                                                     <select class="form-control custom-select-value" required name="category">
                                                                         <option value="">Select One</option>
-																		<option value="Tablet">Tablet</option>
-                                                                        <option value="Capsule">Capsule</option>
-																		<option value="Injection">Injection</option>
-																		<option value="Suspension">Suspension</option>
-																		<option value="Syrup">Syrup</option>
-                                                                        <option value="Comsumable">Comsumable</option>
+																		<option <?php if ($drug['category']=='Tablet') echo 'selected'; ?> value="Tablet">Tablet</option>
+                                                                        <option <?php if ($drug['category']=='Capsule') echo 'selected'; ?> value="Capsule">Capsule</option>
+																		<option <?php if ($drug['category']=='Injection') echo 'selected'; ?> value="Injection">Injection</option>
+																		<option <?php if ($drug['category']=='Suspension') echo 'selected'; ?> value="Suspension">Suspension</option>
+																		<option <?php if ($drug['category']=='Syrup') echo 'selected'; ?> value="Syrup">Syrup</option>
+                                                                        <option <?php if ($drug['category']=='Consumable') echo 'selected'; ?> value="Comsumable">Comsumable</option>
 																	</select>
                                                                 </div>
                                                             </div>
@@ -166,9 +179,9 @@ $_SESSION['pt'] = 'Add New Drug';
                                                                 <div class="col-lg-3"></div>
                                                                 <div class="col-lg-9">
                                                                     <div class="login-horizental cancel-wp pull-left">
-                                                                        <button class="btn btn-white" type="submit">Cancel</button>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_drug" type="submit">Save</button>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_drug2" type="submit">Save and Add New</button>
+                                                                        <a href="drugs.php" class="btn">Cancel</a>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_drug" type="submit"><?php echo $submit; ?></button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_drug2" type="submit"><?php echo $submit; ?> and Add New</button>
                                                                     </div>
                                                                 </div>
                                                             </div>

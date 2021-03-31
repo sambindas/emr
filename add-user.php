@@ -107,7 +107,8 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <label class="login2 pull-right pull-right-pro">Username</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="username" required class="form-control" />
+                                                                <input type="text" id="username" name="username" required class="form-control" />
+                                                                <p style="display: none;" id="usernamemsg"></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -127,7 +128,8 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <label class="login2 pull-right pull-right-pro">Phone</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="phone" class="form-control" />
+                                                                <input type="text" id="phone" name="phone" class="form-control" />
+                                                                <p id="phonemsg" style="display: none;"></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -137,7 +139,8 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <label class="login2 pull-right pull-right-pro">Email</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="email" required name="email" class="form-control" />
+                                                                <input type="email" id="email" required name="email" class="form-control" />
+                                                                <p id="emailmsg" style="display: none;"></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -147,7 +150,7 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <label class="login2 pull-right pull-right-pro">Password</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="password" name="password" class="form-control" />
+                                                                <input type="password" id="password" name="password" class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -157,7 +160,8 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <label class="login2 pull-right pull-right-pro">Confirm Password</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="password" name="password2" class="form-control" />
+                                                                <input type="password" id="password2" name="password2" class="form-control" />
+                                                                <p id="passwordmsg" style="display: none;"></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -207,7 +211,7 @@ $_SESSION['pt'] = 'Add New User';
                                                                 <div class="col-lg-9">
                                                                     <div class="login-horizental cancel-wp pull-left">
                                                                         <button class="btn btn-white" type="submit">Cancel</button>
-                                                                        <button class="btn btn-sm btn-primary login-submit-cs" name="submit_add_new_user" type="submit">Register</button>
+                                                                        <button class="btn btn-sm btn-primary login-submit-cs" onclick="validateForm()" id="submit_add_new_user" name="submit_add_new_user" type="submit">Register</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -287,6 +291,25 @@ $_SESSION['pt'] = 'Add New User';
     <!-- main JS
 		============================================ -->
     <script src="js/main.js"></script>
+    <script type="text/javascript">
+
+        function validateForm() {
+            $(this).attr('disabled', 'true');
+            var password = $('#password').val();
+            var password2 = $('#password2').val();
+            var username = $('#username').val();
+            var phone = $('#phone').val();
+            var email = $('#email').val();
+            console.log(password2+' - '+password)
+            if (password != password2) {
+                $('#passwordmsg').show();
+                $('#passwordmsg').html('<span color="red">Passwords Do Not Match</span>');
+                $(this).removeAttr('disabled');
+                return false;
+            }  
+        }
+
+    </script>
 </body>
 
 </html>

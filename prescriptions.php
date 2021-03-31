@@ -126,7 +126,7 @@ $_SESSION['pt'] = 'Prescriptions';
                                                     
                                                     $patient = getPatient($prescription['patient']);
                                                     if ($current = $prescription['encounter_token']) {
-                                                        $drugs .= $prescription['prescription'].'<br>';
+                                                        $drugs = $prescription['prescription'].'<br>';
                                                     }
                                                     $current = $prescription['encounter_token'];
                                                     $created_by = runSelectQuery('users', ['id', $prescription['created_by']], true);
